@@ -5,7 +5,7 @@ Ce projet implémente une version multi-joueur du célèbre jeu Morpion (Tic-Tac
 ## Contenu du Projet
 
 Le projet est organisé comme suit :
-
+```plaintext
 ├── build
 ├── build.xml
 ├── doc
@@ -20,7 +20,7 @@ Le projet est organisé comme suit :
 ├── ClientHandler.java
 ├── GameServer.java
 └── Plateau.java
-
+```
 - **`src/client`** : Contient les fichiers source pour le client du jeu.
 - **`src/server`** : Contient les fichiers source pour le serveur du jeu.
 - **`build`** : Répertoire pour les fichiers générés lors de la compilation.
