@@ -10,26 +10,37 @@ import java.net.Socket;
  * Chaque instance de ClientHandler est associée à un joueur.
  */
 public class ClientHandler extends Thread {
-    // Constante représentant le code envoyé au client lorsqu'il n'est pas son tour
+    /**
+     * Constante représentant le code envoyé au client lorsqu'il n'est pas son tour
+     */
     private static final int NOT_YOUR_TURN_CODE = 301;
 
-    // Identifiant du joueur associé à ce gestionnaire de client
+    /**
+     * Identifiant du joueur associé à ce gestionnaire de client
+     */
     private int playerID;
-    // Flux d'entrée pour la réception des données du client
+    /**
+     * Flux d'entrée pour la réception des données du client
+     */
     private DataInputStream dataIn;
-    // Flux de sortie pour l'envoi des données au client
+    /**
+     * Flux de sortie pour l'envoi des données au client
+     */
     private DataOutputStream dataOut;
-    // Plateau de jeu associé à ce gestionnaire de client
+    /**
+     * Plateau de jeu associé à ce gestionnaire de client
+     */
     private Plateau plateau;
-    // Gestionnaire de client associé à l'adversaire
+    /**
+     * Gestionnaire de client associé à l'adversaire
+     */
     private ClientHandler enemy;
     private Socket clientSocket;
 
     /**
      * Constructeur de la classe ClientHandler.
      * @param playerID L'identifiant du joueur associé à ce gestionnaire de client.
-     * @param in Le flux d'entrée pour la réception des données du client.
-     * @param out Le flux de sortie pour l'envoi des données au client.
+     * @param client Le socket du joueur
      */
     public ClientHandler(int playerID, Socket client) {
         this.playerID = playerID;

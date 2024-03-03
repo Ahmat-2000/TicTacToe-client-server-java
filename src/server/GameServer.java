@@ -3,15 +3,22 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  * La classe GameServer représente le serveur de jeu pour Tic Tac Toe.
  */
 public class GameServer {
+    /**
+     * player1 et player2 sont deux Threads pour gérer les deux joueurs
+     */
     private ClientHandler player1, player2;
+    /**
+     * C'est le socket du server
+     */
     private ServerSocket serverSocket;
-    private ArrayList<Socket> listOfSocket;
+    /**
+     * Le port sur lequel le server écoute
+     */
     public static int PORT = 5050;
 
     /**
@@ -21,11 +28,10 @@ public class GameServer {
         System.out.println("===== GAME SERVER STARTED =====");
         try {
             serverSocket = new ServerSocket(PORT);
-            listOfSocket = new ArrayList<>();
         } catch (IOException e) {
             e.printStackTrace();
             this.closeEveryThing();
-            System.out.println("IOException from GameServer Constructor");
+            System.out.println("IOException dans le Constructeur de GameServer ");
         }
     }
 
@@ -39,19 +45,17 @@ public class GameServer {
             while (true) {
                 int rand = (int) (Math.random() * 2) + 1;
                 Plateau p = new Plateau(1, 2, rand);
-                System.out.println("Waitting for players...");
+                System.out.println("Attente des joueurs");
                 clientSocket = serverSocket.accept();
-                System.out.println("Player 1 has connected...");
-                listOfSocket.add(clientSocket);
+                System.out.println("Le joueur N°1 est connecté");
                 player1 = new ClientHandler(1, clientSocket);
                 player1.setPlateu(p); 
                 player1.start();
                 player1.sendPlayerId();
 
                 clientSocket = serverSocket.accept();
-                System.out.println("Player 2 has connected ...");
-                System.out.println("New Partie ...");
-                listOfSocket.add(clientSocket);
+                System.out.println("Le joueur N°2 est connecté");
+                System.out.println("Nouvelle partie");
                 player2 = new ClientHandler(2, clientSocket);
                 player1.setEnemy(player2);
                 player2.setEnemy(player1);
@@ -69,7 +73,7 @@ public class GameServer {
             // System.out.println("No longer accepting connections");
         } catch (IOException e) {
             closeEveryThing();
-            System.out.println("IOException from acceptConnections");
+            System.out.println("IOException dans startServer");
         }
     }
 

@@ -1,3 +1,4 @@
+package client;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,26 +16,71 @@ import javax.swing.WindowConstants;
  * La classe CleintScreen représente l'interface graphique du client pour le jeu Tic Tac Toe.
  * Elle hérite de JFrame.
  */
-public class CleintScreen extends JFrame {
-    // Définition des constantes pour l'adresse IP et le port
+public class ClientScreen extends JFrame {
+    /**
+     * L'adresse IP du server
+     */
     public static final String IP = "localhost";
+    /**
+     * Le port sur lequel le server écoute
+     */
     public static final int PORT = 5050;
-    // Déclaration des variables membres
+    /**
+     * Socket pour la communication avec le serveur.
+     */
     private Socket socket;
+
+    /**
+     * Runnable pour la lecture des messages du serveur.
+     */
     private ReadFromServer rfsRunnable;
+
+    /**
+     * Runnable pour l'envoi des messages au serveur.
+     */
     private WriteToServer wtsRunnable;
-    private int width, height, playerID;
+
+    /**
+     * Dimensions du plateau de jeu.
+     */
+    private int width, height;
+
+    /**
+     * Identifiant du joueur.
+     */
+    private int playerID;
+
+    /**
+     * Vue du plateau de jeu.
+     */
     private JPanel plateauView;
+
+    /**
+     * Champ de texte pour afficher les informations du jeu.
+     */
     private JTextField header;
+
+    /**
+     * Tableau de boutons personnalisés pour représenter les cases du plateau.
+     */
     private CustomJButton[] listeOfButton;
-    private boolean yourTurn, gameOver;
+
+    /**
+     * Variable pour suivre le tour du joueur.
+     */
+    private boolean yourTurn;
+
+    /**
+     * Variable pour suivre l'état du jeu (terminé ou non).
+     */
+    private boolean gameOver;
 
     /**
      * Constructeur de la classe CleintScreen.
      * @param width La largeur de la fenêtre.
      * @param height La hauteur de la fenêtre.
      */
-    public CleintScreen(int width, int height) {
+    public ClientScreen(int width, int height) {
         this.width = width;
         this.height = height;
         plateauView = new JPanel(new GridLayout(3, 3));
@@ -197,7 +243,7 @@ public class CleintScreen extends JFrame {
     public static void main(String[] args) throws Exception {
         int WIDTH = 600;
         int HEIGHT = 600;
-        CleintScreen window = new CleintScreen(WIDTH, HEIGHT);
+        ClientScreen window = new ClientScreen(WIDTH, HEIGHT);
         window.connectToServer();
         window.setUpButton();
     }

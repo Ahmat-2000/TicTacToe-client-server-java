@@ -1,75 +1,36 @@
-<project name="TicTacToeClientServerApp" default="run" basedir=".">
-
-
-    <property name="app.name"      value="TicTacToeClientServerApp" />
+<project name="TicTacToeClientServer" default="all" basedir=".">
+    
+    <!-- Propriétés -->
+    <property name="app.name"      value="TicTacToe" />
     <property name="app.version"   value="1.0"/>
     <property name="app.fullname"   value="${app.name}-${app.version}"/>
     <property name="build.home"    value="${basedir}/build"/>
-    <property name="build.test.home"    value="${basedir}/build/test"/>
-    
     <property name="dist.home"     value="${basedir}/dist"/>
     <property name="docs.home"     value="${basedir}/docs"/>
     <property name="src.home"      value="${basedir}/src"/>
-    <property name="src.test.home"      value="${basedir}/test"/>
-   <!--  <property name="test.report.home"      value="${basedir}/test/report"/> -->
-    <property name="test.report.home"      value="${basedir}/build/test/results"/>
-    <property name="lib.home"      value="${basedir}/lib"/>
     <property name="javac.encoding"      value="UTF-8"/>
-  
-
     <!-- ==================== Compile options =========================== -->
-  
     <property name="compile.debug"       value="true"/>
     <property name="compile.deprecation" value="false"/>
     <property name="compile.optimize"    value="true"/>
 
-           
-    <!-- ==================== Compilation Classpath =========================== -->
-
-    <path id="compile.classpath">
-        <fileset dir="${lib.home}">
-            <include name="**/*.jar"/>
-        </fileset>
-    </path>
-
     <!-- ==================== All Target ====================================== -->
-
-
-    <target name="all" depends="clean,compile" description="Clean build and dist directories, then compile"/>
-
-
-
+    <target name="all" depends="clean,prepare,compile,jarFiles,javadoc" description="Clean build and dist directories, then compile"/>
     <!-- ==================== Clean Target ==================================== -->
-
     <target name="clean" description="Delete old build and dist directories">
         <delete dir="${build.home}"/>
-        <delete dir="${build.test.home}"/>
         <delete dir="${dist.home}"/>
-        <delete dir="${test.report.home}"/>
-
+        <delete dir="${docs.home}"/>
     </target>
-
-
 
     <!-- ==================== Prepare Target ================================== -->
 
     <target name="prepare">
-
         <mkdir dir="${build.home}"/>
-
-        <mkdir dir="${build.test.home}" />
-		
         <mkdir dir="${dist.home}"/>
-
-        <mkdir dir="${test.report.home}"/>
-
-		
+        <mkdir dir="${docs.home}"/>
     </target>
-  
-
-
     <!-- ==================== Compile Target ================================== -->
-
     <target name="compile" depends="prepare" description="Compile Java sources">
 
         <javac srcdir="${src.home}"
@@ -78,150 +39,37 @@
                deprecation="${compile.deprecation}"
                optimize="${compile.optimize}"
                encoding="${javac.encoding}"
-               includeantruntime="false">
-           
-            <classpath refid="compile.classpath"/>
-   
+               includeantruntime="false"
+               >
         </javac>
-
-
-        <javac srcdir="${src.test.home}" destdir="${build.test.home}"> 
-            <classpath>
-                <pathelement location="${build.home}"/>
-                <path refid="compile.classpath"/>
-            </classpath>
-
-        </javac> 
-
-
-
-        <!-- Copy application resources -->
-        <copy todir="${build.home}">
-            <fileset dir="${src.home}" excludes="**/*.java"/>
-        </copy>
-
     </target>
-
-
-
-
     <!-- ==================== Dist Target ===================================== -->
 
-
-    <target name="dist" depends="clean,compile,javadoc" description="Create binary distribution">
-		
-		
-        <copy  todir="${dist.home}/lib">
-            <fileset dir="${lib.home}"/>
-        </copy>
-		
-		
-        <!-- Create application JAR file -->    
-        
-        
-        <jar jarfile="${dist.home}/${app.fullname}.jar"
-             basedir="${build.home}">
+    <target name="jarFiles" depends="compile" description="Create binary distribution">	
+        <!-- Création du JAR pour le serveur -->
+        <jar jarfile="${dist.home}/${app.fullname}/server.jar"
+            basedir="${build.home}/server">
             <manifest>
-                <attribute name="Main-Class" value="view.Main"/>
-                <!--<attribute name="Class-Path" value="lib/cartes-0.1.jar" />  -->
+                <attribute name="Main-Class" value="GameServer"/>
             </manifest>
         </jar>
-        
+         <!-- Création du JAR pour le client -->
+         <jar jarfile="${dist.home}/${app.fullname}/client.jar"
+            basedir="${build.home}/client">
+            <manifest>
+                <attribute name="Main-Class" value="ClientScreen"/>
+            </manifest>
+        </jar>
     </target>
-  
-
+    
     <!-- ==================== Javadoc Target ================================== -->
 
-
-    <target name="javadoc" depends="compile" description="Create Javadoc API documentation">
-
-        <mkdir dir="${dist.home}/docs/api"/>
-		
-		
-        <javadoc sourcepath="${src.home}"
-                 destdir="${dist.home}/docs/api"
-                 packagenames="*">
-			
-            <classpath>
-                <fileset dir="${lib.home}">
-                    <include name="**/*.jar"/>
-                </fileset>
-            </classpath>
-			
+    <target name="javadoc" description="Create Javadoc API documentation">
+        <javadoc 
+            sourcepath="${src.home}" 
+            destdir="${docs.home}" 
+            packagenames="*">
         </javadoc>
-		
-
-    </target>
-
-	
-	
-    <!-- ==================== Run Target ================================== -->
-	
-    <target name="run" depends="dist">
-        <java jar="${dist.home}/${app.fullname}.jar" fork="true" />
-    </target>
-	
-    <!-- ==================== Run English ================================== -->
-	
-    <target name="run-english" depends="dist">
-        <java jar="${dist.home}/${app.fullname}.jar" fork="true" >
-            <jvmarg value="-Duser.language=en"/>
-        </java>
-    </target>
-	
-	
-	
-    <!-- ==================== Test Target ===================================== -->
-
-
-
-    <target name="test" depends="clean,compile,dist">
-
-        <junit fork="true"  printsummary="withOutAndErr" haltonfailure="false" showoutput="true" logfailedtests="true">
-
-            <classpath>
-                
-                <pathelement location="${build.test.home}"/>
-                <pathelement location="${build.home}"/>
-      
-                <path refid="compile.classpath"/>
-                
-            </classpath>
-
-        <formatter type="xml"/>
-
-            <batchtest   todir="${test.report.home}">
-            
-                <!--    
-                    <fileset dir="${build.test.home}">
-                        <include name="**/*Test.class"/>
-                    </fileset> 
-                -->
-                <fileset dir="${build.test.home}" includes="**/*Test.class"/>
-                
-            </batchtest>
-
-
-			<!--
-            <test name="cartes.CarteTest"
-                  haltonfailure="no" outfile="result">
-
-                <formatter type="plain"/>
-                <formatter type="xml"/>
-
-                </test>
-         -->
-   
-        </junit>
-    </target>
-
-
-
-    <target name="junitreport" depends="test">
-        <junitreport todir="${test.report.home}">
-            <fileset dir="${test.report.home}" includes="TEST-*.xml"/>
-            <report todir="${test.report.home}"/>
-        </junitreport>
     </target>
 
 </project>

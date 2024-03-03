@@ -1,3 +1,4 @@
+package client;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -7,7 +8,9 @@ import javax.swing.JButton;
  * Elle hérite de JButton.
  */
 public class CustomJButton extends JButton {
-    // Position du bouton sur le plateau de jeu
+    /**
+     * Position du bouton sur le plateau de jeu
+     */
     private int position;
 
     /**
