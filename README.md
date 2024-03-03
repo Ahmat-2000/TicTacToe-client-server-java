@@ -82,3 +82,5 @@ Assurez-vous de suivre ces instructions pour configurer et jouer au Morpion en m
  Pour des questions, contactez [ahmatmhtlouky@gmail.com](mailto:ahmatmhtlouky@gmail.com).
 
 ## License
+
+Ce projet est en open source, donc vous êtes libre à le modifier et à l'utiliser
