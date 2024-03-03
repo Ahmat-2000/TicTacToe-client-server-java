@@ -47,17 +47,19 @@
 
     <target name="jarFiles" depends="compile" description="Create binary distribution">	
         <!-- Création du JAR pour le serveur -->
-        <jar jarfile="${dist.home}/${app.fullname}/server.jar"
-            basedir="${build.home}/server">
+        <jar jarfile="${dist.home}/server.jar"
+            basedir="${build.home}"
+            excludes="client/">
             <manifest>
-                <attribute name="Main-Class" value="GameServer"/>
+                <attribute name="Main-Class" value="server.GameServer"/>
             </manifest>
         </jar>
          <!-- Création du JAR pour le client -->
-         <jar jarfile="${dist.home}/${app.fullname}/client.jar"
-            basedir="${build.home}/client">
+         <jar jarfile="${dist.home}/client.jar"
+            basedir="${build.home}"
+            excludes="server/">
             <manifest>
-                <attribute name="Main-Class" value="ClientScreen"/>
+                <attribute name="Main-Class" value="client.ClientScreen"/>
             </manifest>
         </jar>
     </target>
