@@ -8,8 +8,8 @@ Le projet est organisé comme suit :
 ```plaintext
 ├── build
 ├── build.xml
-├── doc
-├── lib
+├── docs
+├── dist
 └── src
 ├── client
 │ ├── CleintScreen.java
@@ -24,8 +24,8 @@ Le projet est organisé comme suit :
 - **`src/client`** : Contient les fichiers source pour le client du jeu.
 - **`src/server`** : Contient les fichiers source pour le serveur du jeu.
 - **`build`** : Répertoire pour les fichiers générés lors de la compilation.
-- **`lib`** : Répertoire pour les bibliothèques externes.
-- **`doc`** : Répertoire pour la documentation du projet.
+- **`dist`** : Répertoire pour les fichiers executable .jar.
+- **`docs`** : Répertoire pour la documentation du projet.
 
 ## Comment Exécuter et Jouer en Multijoueur
 
@@ -39,18 +39,18 @@ Pour exécuter et jouer en multijoueur au Morpion, veuillez suivre les instructi
    - Assurez-vous d'avoir installé le JDK sur votre machine.
    - Compilez et exécutez le serveur à partir du répertoire racine du projet :
      ```shell
-     cd src
-     javac server/*.java
-     java server.GameServer
+     # pour lancer le server en local
+     java -jar dist/server.jar
      ```
    - Le serveur démarrera et écoutera les connexions des clients sur le port par défaut `5050`.
 
 2. **Exécution du Client** :
    - Compilez et exécutez le client à partir du répertoire racine du projet :
      ```shell
-     cd src
-     javac client/*.java
-     java client.ClientScreen
+     # pour le premier joueur
+     java -jar dist/client.jar
+     # pour le sécond joueur
+     java -jar dist/client.jar 
      ```
    - Le client affichera une interface utilisateur graphique pour se connecter au serveur et jouer au Morpion.
 
@@ -63,13 +63,22 @@ Pour exécuter et jouer en multijoueur au Morpion, veuillez suivre les instructi
 
 Assurez-vous de suivre ces instructions pour configurer et jouer au Morpion en multijoueur sur vos machines locales.
 
-## Auteurs
+## Contribuer
 
-Ce projet a été réalisé par [votre nom] et [autre contributeur], dans le cadre de [nom du cours ou du projet].
+1. Forkez le projet.
+2. Créez votre branche (`git checkout -b mabranche`).
+3. Committez vos changements (`git commit -am 'Ajouter une nouvelle fonctionnalité'`).
+4. Pushez vers la branche (`git push origin mabranche`).
+5. Ouvrez une Pull Request.
 
-## Licence
+## Auteur
 
-Ce projet est sous licence MIT. Consultez le fichier [LICENSE](LICENSE) pour plus d'informations.
+ Ahmat Mahamat Ahmat
 
----
-Vous pouvez personnaliser ce README en remplaçant les sections par les détails spécifiques de votre projet.
+ Master 1 cybersécurité à l'université de Caen
+
+## Contacts
+
+ Pour des questions, contactez [ahmatmhtlouky@gmail.com](mailto:ahmatmhtlouky@gmail.com).
+
+## License
