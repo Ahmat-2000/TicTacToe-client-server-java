@@ -1,83 +1,96 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Random;
+import java.util.ArrayList;
 
-@SuppressWarnings("unused")
-
+/**
+ * La classe GameServer représente le serveur de jeu pour Tic Tac Toe.
+ */
 public class GameServer {
     private ClientHandler player1, player2;
-    private ServerSocket ss;
-    private int numPlayers;
-    private int maxPlayers;
+    private ServerSocket serverSocket;
+    private ArrayList<Socket> listOfSocket;
     public static int PORT = 5050;
+
+    /**
+     * Constructeur de la classe GameServer.
+     */
     public GameServer() {
         System.out.println("===== GAME SERVER STARTED =====");
-        this.numPlayers = 0;
-        this.maxPlayers = 2;
-
         try {
-            this.ss = new ServerSocket(PORT);
+            serverSocket = new ServerSocket(PORT);
+            listOfSocket = new ArrayList<>();
         } catch (IOException e) {
             e.printStackTrace();
-            this.closeEveryThing(ss);
+            this.closeEveryThing();
             System.out.println("IOException from GameServer Constructor");
         }
     }
 
-    public void acceptConnections(){
+    /**
+     * Méthode pour accepter les connexions des joueurs.
+     */
+    public void startServer() {
         try {
-            System.out.println("SERVER RUNNING AT "+ss.getLocalSocketAddress());
-            Plateau p; int rand;
-            rand = -1;
-            p = null;
-            while (numPlayers < maxPlayers) {
-                Socket clientSocket = ss.accept();
-                numPlayers++;
-                if (numPlayers == 1) {
-                    rand = (int)(Math.random() * 2) + 1;
-                    p = new Plateau(1, 2, rand);
-                    player1 = new ClientHandler(numPlayers, clientSocket.getInputStream(),clientSocket.getOutputStream());
-                    player1.setPlateu(p);
-                    player1.start();
-                    player1.sendPlayerId();
-                }
-                else if (numPlayers == 2){
-                    player2 = new ClientHandler(numPlayers, clientSocket.getInputStream(),clientSocket.getOutputStream());
-                    player1.setEnemy(player2); player2.setEnemy(player1);
-                    
-                    player2.setPlateu(p);
-                    player2.start();
-                    player2.sendPlayerId();
-                    player1.sendFirstPlay(rand == 1);
-                    player2.sendFirstPlay(rand == 2);
-                    player1.sendStartMessage();
-                    player2.sendStartMessage();
-                    break;
-                }
+            System.out.println("SERVER RUNNING AT " + serverSocket.getLocalSocketAddress());
+            Socket clientSocket = null;
+            while (true) {
+                int rand = (int) (Math.random() * 2) + 1;
+                Plateau p = new Plateau(1, 2, rand);
+                System.out.println("Waitting for players...");
+                clientSocket = serverSocket.accept();
+                System.out.println("Player 1 has connected...");
+                listOfSocket.add(clientSocket);
+                player1 = new ClientHandler(1, clientSocket);
+                player1.setPlateu(p); 
+                player1.start();
+                player1.sendPlayerId();
 
+                clientSocket = serverSocket.accept();
+                System.out.println("Player 2 has connected ...");
+                System.out.println("New Partie ...");
+                listOfSocket.add(clientSocket);
+                player2 = new ClientHandler(2, clientSocket);
+                player1.setEnemy(player2);
+                player2.setEnemy(player1);
+
+                player2.setPlateu(p);
+                player2.start();
+                player2.sendPlayerId();
+
+                player1.sendFirstPlay(rand == 1);
+                player2.sendFirstPlay(rand == 2);
+
+                player1.sendStartMessage();
+                player2.sendStartMessage();
             }
-            System.out.println("No longer accepting connections");
+            // System.out.println("No longer accepting connections");
         } catch (IOException e) {
-            e.printStackTrace();
+            closeEveryThing();
             System.out.println("IOException from acceptConnections");
         }
     }
-    private void closeEveryThing(ServerSocket s) {
-       try {
-            if (s !=null) {
-                s.close();
-            }
-       } catch (Exception e) {
+
+    /**
+     * Méthode pour fermer le serveur.
+     * @param s Le socket du serveur à fermer.
+     */
+    private void closeEveryThing() {
+        try {
+            serverSocket.close();  
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Méthode principale pour démarrer le serveur.
+     * @param args Arguments de la ligne de commande (non utilisés ici).
+     */
     public static void main(String[] args) {
         GameServer gs = new GameServer();
-        gs.acceptConnections();
+        gs.startServer();
     }
 }
